@@ -177,6 +177,7 @@ vcpkg is a **C++ package manager**. It downloads, builds, and manages library de
 {
   "name": "myproject",
   "version-string": "1.0.0",
+  "builtin-baseline": "c82f74667287d3dc386bce81e44964370c91a289",
   "dependencies": [
     "fmt",
     "gtest"
@@ -185,6 +186,25 @@ vcpkg is a **C++ package manager**. It downloads, builds, and manages library de
 ```
 
 When you run CMake with the vcpkg toolchain, it automatically installs dependencies listed in `vcpkg.json`.
+
+**What is `builtin-baseline`?**
+
+The `builtin-baseline` is a **Git commit hash** from the [vcpkg repository](https://github.com/microsoft/vcpkg). It's NOT a secret or token — it's public information that pins your dependencies to a specific snapshot of the vcpkg package registry.
+
+**Why it matters:**
+- Without it: `fmt` might be v10.2 today, v11.0 next month (potentially breaking your code)
+- With it: You always get the same package versions = reproducible builds
+
+**Is it safe to commit?** Yes! It's meant to be committed. Anyone can see vcpkg commits at https://github.com/microsoft/vcpkg/commits/master
+
+**How to update it:**
+```bash
+# Get the latest vcpkg commit hash
+cd ~/vcpkg
+git pull
+git log -1 --format="%H"
+# Copy the hash and update vcpkg.json and ci.yml
+```
 
 **Adding a new dependency:**
 1. Add it to `vcpkg.json`
